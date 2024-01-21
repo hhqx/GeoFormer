@@ -91,9 +91,11 @@ And the training hyperparameters are adjusted here [train_config/loftr_ds_dense.
 
 
 ```
+# megadepth
 python -m lightning/train_depth_geoformer
-or
-python -m lightning/train_homo_geoformer
+
+# oxford
+python scripts/run_train_homo_geoformer.py
 ```
 
 ### Inference
@@ -105,7 +107,8 @@ Our evaluation code is implemented based on the foundation of this benchmark.
 
 The [eval_Hpatches.py](eval_Hpatches.py) code shows how homography estimation is performed on the Hpatches dataset.
 ```
-python eval_Hpatches.py
+# python eval_Hpatches.py
+python scripts/run_eval_Hpatches.py
 ```
 If everything goes well, you shall see the following message on your screen:
 ```
