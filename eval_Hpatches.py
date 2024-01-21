@@ -9,6 +9,16 @@ from eval_tool.immatch.utils.model_helper import parse_model_config
 
 import torch
 import argparse
+
+import glob
+def get_args(config_name, root_dir):
+    args = parse_model_config(config_name, 'hpatch', root_dir)
+    args_list = []
+    for file in glob.glob(args['ckpt']):
+        args['ckpt'] = file
+        args_list.append(args.copy())
+    return args_list
+
 def eval_hpatches(
         root_dir,
         config_list,
@@ -31,13 +41,16 @@ def eval_hpatches(
         os.makedirs(result_dir)
 
         # Iterate over methods
-    for config_name in config_list:
-        # Load model
-        args = parse_model_config(config_name, 'hpatch', root_dir)
+    # for config_name in config_list:
+    #     # Load model
+    #     args = parse_model_config(config_name, 'hpatch', root_dir)
+
+    for args in [args_ for config_name in config_list for args_ in get_args(config_name, root_dir)]:
         class_name = args['class']
 
         # One log file per method
-        log_file = os.path.join(result_dir, f'{class_name}.txt')
+        # log_file = os.path.join(result_dir, f'{class_name}.txt')
+        log_file = os.path.join(result_dir, f'{class_name}_{os.path.basename(args["ckpt"])}.txt')
         log = open(log_file, 'a')
         lprint_ = lambda ms: lprint(ms, log)
 

@@ -84,7 +84,8 @@ class PL_H_GeoFormer(pl.LightningModule):
         if batch_idx % 100 == 0:
             dt = {'state_dict': self.matcher.state_dict()}
             if self.global_rank == 0:
-                torch.save(dt, f'/data3/ljz/matching/tmp_save/tmp{batch_idx}.ckpt')
+                # torch.save(dt, f'/data3/ljz/matching/tmp_save/tmp{batch_idx}.ckpt')
+                torch.save(dt, f'../data/tmp_save/tmp{batch_idx}.ckpt')
 
         # logging
         if self.trainer.global_rank == 0 and self.global_step % self.trainer.log_every_n_steps == 0:

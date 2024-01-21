@@ -29,9 +29,9 @@ def parse_args():
     # check documentation: https://pytorch-lightning.readthedocs.io/en/latest/common/trainer.html#trainer-flags
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        '--data_cfg_path', type=str, help='data loftr_config path', default='/data3/ljz/matching/my_config/megadepth_trainval_640.py')
+        '--data_cfg_path', type=str, help='data loftr_config path', default='train_config/megadepth_trainval_640.py')
     parser.add_argument(
-        '--main_cfg_path', type=str, help='main loftr_config path', default='/data3/ljz/matching/my_config/loftr_ds_dense.py')
+        '--main_cfg_path', type=str, help='main loftr_config path', default='train_config/loftr_ds_dense.py')
     parser.add_argument(
         '--exp_name', type=str, default='default_exp_name')
     parser.add_argument(
@@ -114,16 +114,17 @@ def main():
     # Lightning MyTrainer
     trainer = pl.Trainer.from_argparse_args(
         args,
-        plugins=DDPPlugin(find_unused_parameters=True,
-                          num_nodes=args.num_nodes,
-                          sync_batchnorm=default_config.TRAINER.WORLD_SIZE > 0),
+        # plugins=DDPPlugin(find_unused_parameters=True,
+        #                   num_nodes=args.num_nodes,
+        #                   sync_batchnorm=default_config.TRAINER.WORLD_SIZE > 0),
+        plugins=DDPPlugin(find_unused_parameters=True,),
         gradient_clip_val=default_config.TRAINER.GRADIENT_CLIPPING,
         callbacks=callbacks,
         logger=logger,
 
         sync_batchnorm=default_config.TRAINER.WORLD_SIZE > 0,
         replace_sampler_ddp=False,  # use custom sampler
-        reload_dataloaders_every_epoch=False,  # avoid repeated samples!
+        reload_dataloaders_every_n_epochs=False,  # avoid repeated samples!
         weights_summary='full',
         # check_val_every_n_epoch=10,
         # val_check_interval=1.0,
@@ -134,4 +135,5 @@ def main():
 
 
 if __name__ == '__main__':
+    print('cwd:', os.getcwd())
     main()

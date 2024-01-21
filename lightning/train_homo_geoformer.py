@@ -61,10 +61,10 @@ def parse_args():
 def main():
     import os
     # parse arguments
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4,5"
     args = parse_args()
     args.num_nodes = 1
-    args.gpus = 8
+    args.gpus = 4
     rank_zero_only(pprint.pprint)(vars(args))
 
     # init default-cfg and merge it with the main- and data-cfg
@@ -116,15 +116,17 @@ def main():
     # Lightning MyTrainer
     trainer = pl.Trainer.from_argparse_args(
         args,
-        plugins=DDPPlugin(find_unused_parameters=True,
-                          num_nodes=args.num_nodes,
-                          sync_batchnorm=default_config.TRAINER.WORLD_SIZE > 0),
+        # plugins=DDPPlugin(find_unused_parameters=True,
+        #                   num_nodes=args.num_nodes,
+        #                   sync_batchnorm=default_config.TRAINER.WORLD_SIZE > 0),
+        plugins=DDPPlugin(find_unused_parameters=True,),
         gradient_clip_val=default_config.TRAINER.GRADIENT_CLIPPING,
         callbacks=callbacks,
         logger=logger,
         sync_batchnorm=default_config.TRAINER.WORLD_SIZE > 0,
-        weights_summary='full',
-        profiler=profiler)
+        # weights_summary='full',
+        profiler=profiler,
+        max_epochs=20)
     loguru_logger.info(f"Trainer initialized!")
     loguru_logger.info(f"Start training!")
     trainer.fit(model, datamodule=data_module)

@@ -3,7 +3,8 @@ default: &default
     match_threshold: 0.2
     imsize: -1
     no_match_upscale: False
-    ckpt: 'saved_ckpt/geoformer.ckpt'
+#    ckpt: 'saved_ckpt/geoformer.ckpt'
+    ckpt: './lightning/logs/tb_logs/default_exp_name/version_2/checkpoints/*.ckpt'
 hpatch:
     <<: *default
     imsize: 480

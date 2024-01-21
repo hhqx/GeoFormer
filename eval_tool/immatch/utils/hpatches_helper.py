@@ -33,7 +33,7 @@ def cal_reproj_dists(p1s, p2s, homography):
     dist = np.sqrt(np.sum((p2s - p2s_proj) ** 2, axis=1))
     return dist
 
-def eval_summary_homography(dists_sa, dists_si, dists_sv, thres):
+def eval_summary_homography(dists_sa, dists_si, dists_sv, thres, lprint=print):
     correct_sa = np.mean(
         [[float(dist <= t) for t in thres] for dist in dists_sa], axis=0
     )
@@ -52,7 +52,7 @@ def eval_summary_homography(dists_sa, dists_si, dists_sv, thres):
     # Generate summary
     summary = f'Hest Correct: a={correct_sa}\ni={correct_si}\nv={correct_sv}\n'
     summary += f'Hest AUC: a={auc_sa}\ni={auc_si}\nv={auc_sv}\n'
-    print(summary)
+    lprint(summary)
     return auc_sa[-1]
 
 def eval_summary_matching(results, thres=[1, 3, 5, 10], save_npy=None):
@@ -314,5 +314,5 @@ def eval_hpatches(
     if 'homography' in task:
         lprint_('==== Homography Estimation ====')        
         lprint_(f'Hest solver={h_solver} est_failed={h_failed} ransac_thres={ransac_thres} inlier_rate={np.mean(inlier_ratio):.2f}')
-        eval_summary_homography(dists_sa, dists_si, dists_sv, thres)
+        eval_summary_homography(dists_sa, dists_si, dists_sv, thres, lprint=lprint_)
 

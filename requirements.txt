@@ -9,3 +9,17 @@ scipy==1.8.0
 torch==1.8.1
 torchvision==0.9.1
 tqdm==4.64.0
+
+# pip install sympy protobuf
+# pip install pytorch-lightning==1.6.0
+# einops
+# pydegensac
+# kornia
+
+# loguru
+# h5py
+# albumentations
+
+
+# pip install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+
